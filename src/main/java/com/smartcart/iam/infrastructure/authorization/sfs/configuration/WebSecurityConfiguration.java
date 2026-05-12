@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +17,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import java.util.List;
 
 /**
@@ -68,12 +67,11 @@ public class WebSecurityConfiguration {
      */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        var authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
+        var authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+
         authenticationProvider.setPasswordEncoder(hashingService);
         return authenticationProvider;
     }
-
     /**
      * This method creates the password encoder.
      * @return The {@link PasswordEncoder} instance with the hashing service
