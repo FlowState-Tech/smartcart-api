@@ -48,18 +48,20 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = tokenService.getBearerTokenFrom(request);
-            LOGGER.info("Token: {}", token);
+
+            // Si no hay token, simplemente pasamos al siguiente filtro sin loguear error
             if (token != null && tokenService.validateToken(token)) {
                 String username = tokenService.getUsernameFromToken(token);
                 var userDetails = userDetailsService.loadUserByUsername(username);
                 SecurityContextHolder.getContext().setAuthentication(UsernamePasswordAuthenticationTokenBuilder.build(userDetails, request));
-            } else {
-                LOGGER.info("Token is not valid");
+                LOGGER.info("Authenticated user: {}", username);
             }
-
         } catch (Exception e) {
+            // Solo logueamos errores críticos, no la ausencia de token
             LOGGER.error("Cannot set user authentication: {}", e.getMessage());
         }
+
+        // Esta línea SIEMPRE debe ejecutarse al final
         filterChain.doFilter(request, response);
     }
 }

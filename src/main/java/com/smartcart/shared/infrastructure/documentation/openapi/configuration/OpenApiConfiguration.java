@@ -43,7 +43,7 @@ public class OpenApiConfiguration {
 
         // Add a security scheme
 
-       /*final String securitySchemeName = "bearerAuth";
+       final String securitySchemeName = "bearerAuth";
 
        openApi.addSecurityItem(new SecurityRequirement()
                        .addList(securitySchemeName))
@@ -53,7 +53,7 @@ public class OpenApiConfiguration {
                                        .name(securitySchemeName)
                                        .type(SecurityScheme.Type.HTTP)
                                        .scheme("bearer")
-                                       .bearerFormat("JWT")));*/
+                                       .bearerFormat("JWT")));
 
         // Return the OpenAPI configuration object with all the settings
 

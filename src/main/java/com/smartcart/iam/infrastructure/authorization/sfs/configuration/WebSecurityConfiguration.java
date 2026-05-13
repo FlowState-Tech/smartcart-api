@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.http.HttpMethod;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public class WebSecurityConfiguration {
      * @return The Bearer Authorization Request Filter
      * @see BearerAuthorizationRequestFilter
      */
-    @Bean
+
     public BearerAuthorizationRequestFilter authorizationRequestFilter() {
         return new BearerAuthorizationRequestFilter(tokenService, userDetailsService);
     }
@@ -101,8 +102,16 @@ public class WebSecurityConfiguration {
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedRequestHandler))
                 .sessionManagement( customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/v1/authentication/sign-up",
+                                "/api/v1/authentication/sign-in",
+                                "/api/v1/auth/sign-up",
+                                "/api/v1/auth/sign-in").permitAll()
                         .requestMatchers(
                                 "/api/v1/authentication/**",
+                                "/api/v1/auth/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
@@ -111,6 +120,7 @@ public class WebSecurityConfiguration {
                         .anyRequest().authenticated());
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
 
     }
