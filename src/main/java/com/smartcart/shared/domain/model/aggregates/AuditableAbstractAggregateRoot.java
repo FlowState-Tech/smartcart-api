@@ -30,6 +30,20 @@ public class AuditableAbstractAggregateRoot<T extends AbstractAggregateRoot<T>> 
     @Column(nullable = false)
     private Date updatedAt;
 
+    @PrePersist
+    protected void onCreate() {
+        Date now = new Date();
+        if (createdAt == null) {
+            createdAt = now;
+        }
+        updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Date();
+    }
+
     /**
      * Registers a domain event.
      *
