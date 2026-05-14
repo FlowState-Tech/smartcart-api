@@ -27,7 +27,7 @@ public class OpenApiConfiguration {
     // Methods
 
     @Bean
-    public OpenAPI learningPlatformOpenApi() {
+    public OpenAPI smartcartOpenApi() {
         // General configuration
         var openApi = new OpenAPI();
         openApi
@@ -38,12 +38,12 @@ public class OpenApiConfiguration {
                         .license(new License().name("Apache 2.0")
                                 .url("https://springdoc.org")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("ACME Learning Platform wiki Documentation")
-                        .url("https://acme-learning-platform.wiki.github.io/docs"));
+                        .description("SmartCart wiki Documentation")
+                        .url("https://smartcart.wiki.github.io/docs"));
 
         // Add a security scheme
 
-       /*final String securitySchemeName = "bearerAuth";
+       final String securitySchemeName = "bearerAuth";
 
        openApi.addSecurityItem(new SecurityRequirement()
                        .addList(securitySchemeName))
@@ -53,7 +53,7 @@ public class OpenApiConfiguration {
                                        .name(securitySchemeName)
                                        .type(SecurityScheme.Type.HTTP)
                                        .scheme("bearer")
-                                       .bearerFormat("JWT")));*/
+                                       .bearerFormat("JWT")));
 
         // Return the OpenAPI configuration object with all the settings
 
