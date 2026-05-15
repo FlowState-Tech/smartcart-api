@@ -5,6 +5,7 @@ import com.smartcart.shoppingjourney.domain.model.entities.ShoppingCart;
 import com.smartcart.shoppingjourney.infrastructure.persistence.jpa.repositories.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,5 +28,10 @@ public class ShoppingCartCommandServiceImpl { // <--- ELIMINA EL "extends JpaRep
     public Optional<ShoppingCart> getCartById(Long id) {
         // Ahora .findById() también funcionará
         return shoppingCartRepository.findById(id);
+    }
+
+    // Este es el método que el controlador está gritando que no encuentra:
+    public List<ShoppingCart> getAllCarts() {
+        return shoppingCartRepository.findAll();
     }
 }
