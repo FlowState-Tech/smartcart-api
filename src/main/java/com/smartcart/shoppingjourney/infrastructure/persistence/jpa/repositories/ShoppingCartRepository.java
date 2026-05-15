@@ -8,8 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
-    // Aquí puedes agregar métodos de búsqueda personalizados después,
-    // pero por ahora, ya tienes: .save(), .findAll(), .findById(), etc.
-    
     Optional<ShoppingCart> findByCustomerName(String customerName);
 }
