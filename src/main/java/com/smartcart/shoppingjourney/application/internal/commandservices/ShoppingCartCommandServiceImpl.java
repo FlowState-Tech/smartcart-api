@@ -4,6 +4,7 @@ import com.smartcart.shoppingjourney.domain.model.entities.ShoppingCart;
 import com.smartcart.shoppingjourney.infrastructure.persistence.jpa.repositories.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -11,7 +12,6 @@ public class ShoppingCartCommandServiceImpl {
 
     private final ShoppingCartRepository shoppingCartRepository;
 
-    // Inyección por constructor (lo más seguro en Spring)
     public ShoppingCartCommandServiceImpl(ShoppingCartRepository shoppingCartRepository) {
         this.shoppingCartRepository = shoppingCartRepository;
     }
@@ -25,5 +25,10 @@ public class ShoppingCartCommandServiceImpl {
 
     public Optional<ShoppingCart> getCartById(Long id) {
         return shoppingCartRepository.findById(id);
+    }
+
+    // Este es el método que el controlador está gritando que no encuentra:
+    public List<ShoppingCart> getAllCarts() {
+        return shoppingCartRepository.findAll();
     }
 }
