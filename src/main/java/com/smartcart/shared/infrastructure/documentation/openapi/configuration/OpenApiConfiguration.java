@@ -11,6 +11,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import io.swagger.v3.oas.models.servers.Server;
+import java.util.List;
 
 @Configuration
 public class OpenApiConfiguration {
@@ -30,6 +32,13 @@ public class OpenApiConfiguration {
     public OpenAPI smartcartOpenApi() {
         // General configuration
         var openApi = new OpenAPI();
+        Server devServer = new Server();
+        devServer.setUrl("http://localhost:8080");
+        devServer.setDescription("Servidor de Desarrollo (Local)");
+
+        Server prodServer = new Server();
+        prodServer.setUrl("https://smartcart-api-production.up.railway.app"); // <--- Tu URL de Railway
+        prodServer.setDescription("Servidor de Producción (Railway)");
         openApi
                 .info(new Info()
                         .title(this.applicationName)
@@ -39,8 +48,8 @@ public class OpenApiConfiguration {
                                 .url("https://springdoc.org")))
                 .externalDocs(new ExternalDocumentation()
                         .description("SmartCart wiki Documentation")
-                        .url("https://smartcart.wiki.github.io/docs"));
-
+                        .url("https://smartcart.wiki.github.io/docs"))
+                .servers(List.of(devServer, prodServer));
         // Add a security scheme
 
        final String securitySchemeName = "bearerAuth";
