@@ -24,6 +24,7 @@ public class GoogleMapsRoutingAdapter implements MapsRoutingGateway {
     private final String apiKey;
     private final FallbackMapsRoutingAdapter fallback = new FallbackMapsRoutingAdapter();
 
+    @org.springframework.beans.factory.annotation.Autowired
     public GoogleMapsRoutingAdapter(@Value("${smartcart.maps.google.api-key:}") String apiKey) {
         this(apiKey, RestClient.create("https://maps.googleapis.com"));
     }
