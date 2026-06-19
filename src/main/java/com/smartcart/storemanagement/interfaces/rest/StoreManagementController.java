@@ -13,6 +13,7 @@ import com.smartcart.storemanagement.domain.services.StoreQueryService;
 import com.smartcart.storemanagement.interfaces.rest.resources.BulkUploadResponse;
 import com.smartcart.storemanagement.interfaces.rest.resources.ClearanceResponse;
 import com.smartcart.storemanagement.interfaces.rest.resources.CreateClearanceRequest;
+import com.smartcart.storemanagement.interfaces.rest.resources.CreateInventoryItemRequest;
 import com.smartcart.storemanagement.interfaces.rest.resources.ProductStockResponse;
 import com.smartcart.storemanagement.interfaces.rest.resources.RegisterStoreRequest;
 import com.smartcart.storemanagement.interfaces.rest.resources.StoreAnalyticsResponse;
@@ -22,6 +23,7 @@ import com.smartcart.storemanagement.interfaces.rest.transform.RegisterStoreComm
 import com.smartcart.storemanagement.interfaces.rest.transform.ProductStockResponseFromEntityAssembler;
 import com.smartcart.storemanagement.interfaces.rest.transform.StoreAnalyticsResponseFromReadModelAssembler;
 import com.smartcart.storemanagement.interfaces.rest.transform.StoreProfileResponseFromEntityAssembler;
+import com.smartcart.storemanagement.interfaces.rest.transform.AddInventoryItemCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -105,6 +107,23 @@ public class StoreManagementController {
                 LocalDateTime.now()
         );
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/stores/{storeId}/inventory/items")
+    @Operation(summary = "Add inventory item", description = "Adds a single item to the inventory.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Item added successfully."),
+            @ApiResponse(responseCode = "400", description = "Bad request.")})
+    public ResponseEntity<ProductStockResponse> addInventoryItem(@PathVariable Long storeId,
+                                                                 @RequestBody CreateInventoryItemRequest request) {
+        var command = AddInventoryItemCommandFromResourceAssembler.toCommand(storeId, request);
+        var result = inventoryCommandService.handle(command);
+        var response = ProductStockResponseFromEntityAssembler.toResource(
+                result.product(),
+                result.priceItem(),
+                result.stockPoint()
+        );
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/stores/{storeId}/inventory/clearance")
