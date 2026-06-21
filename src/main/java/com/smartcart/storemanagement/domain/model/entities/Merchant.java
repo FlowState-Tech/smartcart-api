@@ -19,6 +19,9 @@ public class Merchant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 64)
+    private String merchantId;
+
     @Column(nullable = false, length = 120)
     private String fullName;
 
@@ -36,11 +39,14 @@ public class Merchant {
         // For JPA
     }
 
-    public Merchant(String fullName, String dni, String email) {
-        updateProfile(fullName, dni, email);
+    public Merchant(String merchantId, String fullName, String dni, String email) {
+        updateProfile(merchantId, fullName, dni, email);
     }
 
-    public void updateProfile(String fullName, String dni, String email) {
+    public void updateProfile(String merchantId, String fullName, String dni, String email) {
+        if (merchantId == null || merchantId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Merchant id is required");
+        }
         if (fullName == null || fullName.trim().isEmpty()) {
             throw new IllegalArgumentException("Full name is required");
         }
@@ -50,6 +56,7 @@ public class Merchant {
         if (email == null || email.trim().isEmpty()) {
             throw new IllegalArgumentException("Email is required");
         }
+        this.merchantId = merchantId.trim();
         this.fullName = fullName.trim();
         this.dni = dni.trim();
         this.email = email.trim();

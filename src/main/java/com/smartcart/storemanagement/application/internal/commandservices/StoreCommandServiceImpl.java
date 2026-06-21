@@ -36,7 +36,7 @@ public class StoreCommandServiceImpl implements StoreCommandService {
         if (storeRepository.existsByRucValue(ruc.getNormalized())) {
             throw new IllegalArgumentException("Store with RUC already exists");
         }
-        var merchant = buildPlaceholderMerchant(command.merchantId());
+        var merchant = buildMerchant(command.merchantId());
         var branch = new StoreBranch(command.address(), command.openingHours());
         var store = new Store(command.name(), ruc, merchant, List.of(branch));
         var savedStore = storeRepository.save(store);
@@ -44,10 +44,10 @@ public class StoreCommandServiceImpl implements StoreCommandService {
         return Optional.of(savedStore);
     }
 
-    private Merchant buildPlaceholderMerchant(String merchantId) {
+    private Merchant buildMerchant(String merchantId) {
         var normalized = merchantId == null ? "UNKNOWN" : merchantId.trim();
         var email = normalized + "@smartcart.local";
-        return new Merchant("Merchant " + normalized, "00000000", email);
+        return new Merchant(normalized, "Merchant " + normalized, "00000000", email);
     }
 }
 
