@@ -1,5 +1,6 @@
 package com.smartcart.iam.application.internal.commandservices;
 
+import com.smartcart.shared.domain.exceptions.InvalidCredentialsException;
 import com.smartcart.iam.application.internal.outboundservices.hashing.HashingService;
 import com.smartcart.iam.application.internal.outboundservices.tokens.TokenService;
 import com.smartcart.iam.domain.model.aggregates.User;
@@ -49,9 +50,9 @@ public class UserCommandServiceImpl implements UserCommandService {
     public Optional<ImmutablePair<User, String>> handle(SignInCommand command) {
         var user = userRepository.findByUsername(command.username());
         if (user.isEmpty())
-            throw new RuntimeException("User not found");
+            throw new InvalidCredentialsException("User not found");
         if (!hashingService.matches(command.password(), user.get().getPassword()))
-            throw new RuntimeException("Invalid password");
+            throw new InvalidCredentialsException("Invalid password");
         var token = tokenService.generateToken(user.get().getUsername());
         return Optional.of(ImmutablePair.of(user.get(), token));
     }
